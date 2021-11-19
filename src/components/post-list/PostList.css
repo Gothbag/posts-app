@@ -1,0 +1,27 @@
+table.post-list {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  background-color: #fcf59a;
+  font-size: 14px;
+}
+
+table.post-list td,
+table.post-list th {
+  border: 2px solid #000;
+  text-align: left;
+  padding: 6px;
+}
+
+table.post-list button {
+  border: none;
+  color: white;
+  padding: 15px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  background-color: #4caf50;
+}
