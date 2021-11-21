@@ -1,25 +1,27 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
-import { loadPosts, postListSelector } from "../../redux/posts";
 import PostList from "../../components/post-list";
 
 import "./Home.css";
+import { postsWithUserSelector } from "../../redux/common";
 
 export default function Home() {
-  const dispatch = useDispatch();
+  const [userFilter, setUserFilter] = useState("");
 
-  const posts = useSelector(postListSelector);
+  const onChangeFilter = e => setUserFilter(e.target.value);
 
-  useEffect(() => {
-    if (posts.length === 0) {
-      dispatch(loadPosts());
-    }
-  }, []);
+  const postsWithUsers = useSelector(postsWithUserSelector);
 
   return (
     <div className="posts-container">
-      <PostList posts={posts} />
+      <input value={userFilter} onChange={onChangeFilter} />
+      Filter by author
+      <PostList
+        posts={postsWithUsers.filter(post =>
+          post.author.toUpperCase().includes(userFilter.toUpperCase())
+        )}
+      />
     </div>
   );
 }

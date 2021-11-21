@@ -1,28 +1,51 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
-import { postsFocusItem, postsFocusedItemSelector } from "../../redux/posts";
+import { addNewPost, postEdit } from "../../redux/posts";
 
 import PostForm from "../../components/post-form";
+import { SearchParams } from "../../constants";
+import { postByIdWithUserSelector } from "../../redux/common";
 
 const PostPage = () => {
   const { id = "" } = useParams();
 
   const dispatch = useDispatch();
 
-  const post = useSelector(postsFocusedItemSelector);
   const navigate = useNavigate();
+  const { search } = useLocation();
 
-  useEffect(() => {
-    dispatch(postsFocusItem(id));
-  }, [id]);
+  const searchParams = new URLSearchParams(search);
 
-  const params = new URLSearchParams(props.location.search);
+  const isEditMode = searchParams.get(SearchParams.isEditMode) === "true";
+  const isNew = id === "new";
+
+  const parsedId = parseInt(id);
+
+  const post = useSelector(postByIdWithUserSelector(parsedId));
+
+  if (!post && !isNew) {
+    navigate("/");
+  }
+
+  const onSubmitForm = post => {
+    if (isNew) {
+      dispatch(addNewPost(post));
+    } else {
+      dispatch(postEdit({ ...post, id: parsedId }));
+    }
+    navigate("/");
+  };
 
   return (
-    <div className="posts-container">
-      <PostForm post={post} />
+    <div>
+      <PostForm
+        post={post}
+        isEditMode={isEditMode || isNew}
+        onSubmit={onSubmitForm}
+        primaryButtonText={isNew ? "Add" : "Accept"}
+      />
     </div>
   );
 };

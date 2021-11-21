@@ -1,8 +1,14 @@
 import { useState } from "react";
 
 import "./PostForm.css";
+import { Link } from "react-router-dom";
 
-export default function PostForm({ isEdit, post, onSubmit }) {
+export default function PostForm({
+  isEditMode,
+  onSubmit,
+  post = {},
+  primaryButtonText
+}) {
   const [formData, setFormData] = useState({
     title: post.title || "",
     body: post.body || ""
@@ -24,6 +30,7 @@ export default function PostForm({ isEdit, post, onSubmit }) {
 
   return (
     <div className="post-form">
+      <h6>Author: {post.author || "Admin"}</h6>
       <form>
         <h3>
           <input
@@ -32,20 +39,24 @@ export default function PostForm({ isEdit, post, onSubmit }) {
             name="title"
             value={formData.title}
             onChange={onChangeInput}
-            disabled={!isEdit}
+            disabled={!isEditMode}
           />
         </h3>
-        <input
-          type="text"
+        <textarea
           id="body"
           name="body"
           value={formData.body}
           onChange={onChangeInput}
-          disabled={!isEdit}
+          disabled={!isEditMode}
         />
-        <button disabled={isButtonDisabled} onClick={handleOnSubmitForm}>
-          Add
-        </button>
+        {isEditMode && (
+          <button disabled={isButtonDisabled} onClick={handleOnSubmitForm}>
+            {primaryButtonText}
+          </button>
+        )}
+        <Link to={`/`}>
+          <button>{isEditMode ? "Cancel" : "Exit"}</button>
+        </Link>
       </form>
     </div>
   );

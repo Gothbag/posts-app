@@ -8,34 +8,33 @@ const instance = axios.create({
 
 export const postsSlice = createSlice({
   name: "posts",
-  initialState: { list: [], focusedItem: {} },
+  initialState: [],
   reducers: {
     postsAdd: (state, action) => {
-      return { ...state, list: [...state.list, action.payload] };
+      return [...state, ...action.payload];
     },
-    postsFocusItem: (state, action) => {
-      const { payload: id } = action;
-      const searchedItemArr = state.list.filter(item => item.id === id);
-      if (searchedItemArr) {
-        return { ...state, focusedItem: searchedItemArr[0] };
-      }
-      return { ...state, focusedItem: {} };
+    postEdit: (state, action) => {
+      const { payload } = action;
+      return state.map(post => {
+        if (post.id === payload.id) {
+          return { ...post, body: payload.body, title: payload.title };
+        }
+        return post;
+      });
     }
   }
 });
 
-export const { postsAdd, postsFocusItem } = postsSlice.actions;
+export const { postsAdd, postEdit } = postsSlice.actions;
 
 export const loadPosts = () => async dispatch => {
   const resp = await instance.get("/posts");
   dispatch(postsAdd(resp.data));
 };
 
-const addNewPost = post => dispatch => {
+export const addNewPost = post => dispatch => {
   const id = uuidv4();
-  dispatch(postsAdd({ ...post, id }));
+  dispatch(postsAdd([{ ...post, id }]));
 };
-
-export const postAdd = newPostMock;
 
 export const postsReducer = postsSlice.reducer;

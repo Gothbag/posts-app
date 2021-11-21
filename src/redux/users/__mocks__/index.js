@@ -1,12 +1,12 @@
 export const state = {
-  posts: [
+  users: [
     {
       id: 1,
-      title: "Cidade de Deus"
+      username: "Paquito"
     },
     {
       id: 2,
-      title: "A Confederacy of Dunces"
+      username: "Glen"
     }
   ]
 };
